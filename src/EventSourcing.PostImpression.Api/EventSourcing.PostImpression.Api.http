@@ -1,0 +1,6 @@
+@EventSourcing.PostImpression.Api_HostAddress = http://localhost:5192
+
+GET {{EventSourcing.PostImpression.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
