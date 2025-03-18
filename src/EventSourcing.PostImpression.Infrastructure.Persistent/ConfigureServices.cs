@@ -11,6 +11,9 @@ public static class ConfigureServices
         services.AddDbContext<NewsImpressionDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("ConnectionString"))
         );
+
+        services.AddScoped<INewsEventStoreRepository, NewsEventStoreRepository>();
+        
         return services;
     }
 }

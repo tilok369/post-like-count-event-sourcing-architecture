@@ -8,19 +8,20 @@ namespace EventSourcing.PostImpression.Infrastructure.Persistent;
 public class NewsEventStoreRepository(NewsImpressionDbContext dbContext)
     : INewsEventStoreRepository
 {
-    public async Task SaveAsync(Guid newsId, IEnumerable<NewsImpressionBaseEvent> events)
+    public async Task<DateTime> SaveAsync(Guid newsId, IEnumerable<NewsImpressionBaseEvent> events)
     {
         var eventEntities = events.Select(e => 
             new NewsEventStore
-        {
-            NewsId = newsId,
-            EventType = e.GetType().ToString(),
-            EventData = JsonSerializer.Serialize(e),
-            OccurredOn = e.OccurredOn
-        });
+            {
+                NewsId = newsId,
+                EventType = e.GetType().ToString(),
+                EventData = JsonSerializer.Serialize(e),
+                OccurredOn = e.OccurredOn
+            });
 
         await dbContext.NewsEventStores.AddRangeAsync(eventEntities);
         await dbContext.SaveChangesAsync();
+        return eventEntities?.Last()?.OccurredOn ?? DateTime.MinValue;
     }
 
     public async Task<IEnumerable<NewsImpressionBaseEvent>> GetAsync(Guid newsId)
