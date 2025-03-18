@@ -30,9 +30,11 @@ public class NewsEventStoreRepository(NewsImpressionDbContext dbContext)
             .Where(e => e.NewsId == newsId)
             .OrderBy(e => e.OccurredOn)
             .ToListAsync();
+        
+        var assembly = typeof(NewsImpressionBaseEvent).Assembly.FullName;
 
         return eventEntities.Select(e =>
-                JsonSerializer.Deserialize(e.EventData, Type.GetType($"{e.EventType}")!) as NewsImpressionBaseEvent)
+                (NewsImpressionBaseEvent)JsonSerializer.Deserialize(e.EventData, Type.GetType($"{e.EventType}, {assembly}")))
             .Where(e => e != null)
             .ToList();
     }

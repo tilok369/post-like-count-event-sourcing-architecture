@@ -14,6 +14,8 @@ public static class CreateNewsImpression
     public record NewsLikeCommand(Guid Id, int UserId) : IRequest<NewsLikeResponse>;
     public record NewsLikeRemoveCommand(Guid Id, int UserId) : IRequest<NewsLikeRemoveResponse>;
 
+    public record ShowLikeCountCommand(Guid Id) : IRequest<int>;
+
     public record NewsLikeResponse(bool Success, DateTime LikedAt);
     public record NewsLikeRemoveResponse(bool Success, DateTime LikedAt);
     
@@ -41,6 +43,23 @@ public static class CreateNewsImpression
             return new NewsLikeRemoveResponse(occurredOn != DateTime.MinValue, occurredOn);
         }
     }
+    
+    public class ShowLikeCountHandler(INewsEventStoreRepository eventStoreRepository)
+        : IRequestHandler<ShowLikeCountCommand, int>
+    {
+        public async Task<int> Handle(ShowLikeCountCommand request, CancellationToken cancellationToken)
+        {
+            var news = News.Create(request.Id);
+            var impressions = await eventStoreRepository.GetAsync(request.Id);
+
+            foreach (var impression in impressions)
+            {
+                news.Apply(impression);
+            }
+
+            return news.TotalLikes;
+        }
+    }
 }
 
 public class CreateNewsImpressionEndpoints: ICarterModule
@@ -56,6 +75,12 @@ public class CreateNewsImpressionEndpoints: ICarterModule
         app.MapPost("news/like/remove", async (CreateNewsImpression.NewsLikeRemoveCommand command, ISender sender) =>
         {
             var result = await sender.Send(command);
+            return Results.Ok(result);
+        });
+        
+        app.MapGet("news/likes/{id}", async (Guid id, ISender sender) => 
+        {
+            var result = await sender.Send(new CreateNewsImpression.ShowLikeCountCommand(id));
             return Results.Ok(result);
         });
     }

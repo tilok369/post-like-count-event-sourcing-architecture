@@ -12,6 +12,8 @@ public class News
     private News()
     {
     }
+    
+    public int TotalLikes => _likedByUserIds.Count;
 
     public static News Create(Guid id)
     {
@@ -30,7 +32,7 @@ public class News
         Apply(new NewsLikeRemovedEvent(){NewsId = Id, UserId = likedByUserId});
     }
 
-    private void Apply(NewsImpressionBaseEvent @event)
+    public void Apply(NewsImpressionBaseEvent @event)
     {
         When(@event);
         _impressionsEvents.Add(@event);
