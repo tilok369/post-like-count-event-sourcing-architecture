@@ -4,6 +4,7 @@ using EventSourcing.PostImpression.Infrastructure.Persistent;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventSourcing.PostImpression.Infrastructure.Persistent.Migrations
 {
     [DbContext(typeof(NewsImpressionDbContext))]
-    partial class NewsImpressionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250319100144_Projection_Added")]
+    partial class Projection_Added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,9 +59,6 @@ namespace EventSourcing.PostImpression.Infrastructure.Persistent.Migrations
 
                     b.Property<int>("TotalLikes")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("NewsId");
 

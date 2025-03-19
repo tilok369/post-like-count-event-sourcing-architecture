@@ -15,6 +15,7 @@ public static class CreateNewsImpression
     public record NewsLikeRemoveCommand(Guid Id, int UserId) : IRequest<NewsLikeRemoveResponse>;
 
     public record ShowLikeCountCommand(Guid Id) : IRequest<int>;
+    public record ShowTotalLikeCountCommand(Guid Id) : IRequest<int>;
 
     public record NewsLikeResponse(bool Success, DateTime LikedAt);
     public record NewsLikeRemoveResponse(bool Success, DateTime LikedAt);
@@ -28,7 +29,8 @@ public static class CreateNewsImpression
             var news = News.Create(request.Id);
             news.Like(request.UserId);
             var occurredOn = await eventStoreRepository.SaveAsync(request.Id, news.GetEvents());
-            return new NewsLikeResponse(occurredOn != DateTime.MinValue, occurredOn);
+            var updatedOn = await eventStoreRepository.UpdateProjectionAsync(request.Id, news.GetEvents());
+            return new NewsLikeResponse(occurredOn != DateTime.MinValue && updatedOn != DateTime.MinValue, occurredOn);
         }
     }
     
@@ -40,7 +42,8 @@ public static class CreateNewsImpression
             var news = News.Create(request.Id);
             news.RemoveLike(request.UserId);
             var occurredOn = await eventStoreRepository.SaveAsync(request.Id, news.GetEvents());
-            return new NewsLikeRemoveResponse(occurredOn != DateTime.MinValue, occurredOn);
+            var updatedOn = await eventStoreRepository.UpdateProjectionAsync(request.Id, news.GetEvents());
+            return new NewsLikeRemoveResponse(occurredOn != DateTime.MinValue && updatedOn != DateTime.MinValue, occurredOn);
         }
     }
     
@@ -58,6 +61,15 @@ public static class CreateNewsImpression
             }
 
             return news.TotalLikes;
+        }
+    }
+    
+    public class ShowTotalLikeCountCommandHandler(INewsEventStoreRepository eventStoreRepository): IRequestHandler<ShowTotalLikeCountCommand, int>
+    {
+        public async Task<int> Handle(ShowTotalLikeCountCommand request, CancellationToken cancellationToken)
+        {
+            var totalCount = await eventStoreRepository.GetTotalCountAsync(request.Id);
+            return totalCount;
         }
     }
 }
@@ -81,6 +93,12 @@ public class CreateNewsImpressionEndpoints: ICarterModule
         app.MapGet("news/likes/{id}", async (Guid id, ISender sender) => 
         {
             var result = await sender.Send(new CreateNewsImpression.ShowLikeCountCommand(id));
+            return Results.Ok(result);
+        });
+        
+        app.MapGet("news/total-likes/{id}", async (Guid id, ISender sender) => 
+        {
+            var result = await sender.Send(new CreateNewsImpression.ShowTotalLikeCountCommand(id));
             return Results.Ok(result);
         });
     }

@@ -38,4 +38,38 @@ public class NewsEventStoreRepository(NewsImpressionDbContext dbContext)
             .Where(e => e != null)
             .ToList();
     }
+    
+    public async Task<DateTime> UpdateProjectionAsync(Guid newsId, IEnumerable<NewsImpressionBaseEvent> events)
+    {
+        var newEntity = false;
+        var summary = await dbContext.NewsImpressionSummaries.FindAsync(newsId);
+        if (summary == null)
+        {
+            newEntity = true;
+            summary = new NewsImpressionSummary { NewsId = newsId };
+        }
+
+        foreach (var @event in events)
+        {
+            if (@event is NewsLikedEvent) 
+                summary.TotalLikes++;
+            if (@event is NewsLikeRemovedEvent)
+                summary.TotalLikes = Math.Max(0, summary.TotalLikes - 1);
+        }
+        
+        summary.UpdatedOn = DateTime.UtcNow;
+
+        if (newEntity)
+            dbContext.NewsImpressionSummaries.Add(summary);
+        else
+            dbContext.NewsImpressionSummaries.Update(summary);
+        await dbContext.SaveChangesAsync();
+        return summary?.UpdatedOn ?? DateTime.MinValue;
+    }
+
+    public async Task<int> GetTotalCountAsync(Guid newsId)
+    {
+        var summary = await dbContext.NewsImpressionSummaries.FindAsync(newsId);
+        return summary?.TotalLikes ?? 0;
+    }
 }
