@@ -9,4 +9,6 @@ public interface INewsEventStoreRepository
     Task<IEnumerable<NewsImpressionBaseEvent>> GetAsync(Guid newsId);
     Task<DateTime> UpdateProjectionAsync(Guid newsId, IEnumerable<NewsImpressionBaseEvent> events);
     Task<int> GetTotalCountAsync(Guid newsId);
+    Task<IEnumerable<NewsEventStore>> GetUnprocessedEventStoreAsync();
+    Task UpdateEventStoreAsync(NewsEventStore newsEventStore);
 }

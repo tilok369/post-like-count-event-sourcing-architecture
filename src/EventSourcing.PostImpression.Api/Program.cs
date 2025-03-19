@@ -1,11 +1,14 @@
 using EventSourcing.PostImpression.Infrastructure.Persistent;
 using Carter;
 using EventSourcing.PostImpression.Application;
+using EventSourcing.PostImpression.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddHostedService<ProjectionBackgroundService>();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 

@@ -7,4 +7,6 @@ public class NewsEventStore
     public required string EventType { get; set; }
     public required string EventData { get; set; }
     public DateTime OccurredOn { get; set; }
+    public bool Processed { get; set; } = false;
+    public DateTime? ProcessedOn { get; set; }
 }

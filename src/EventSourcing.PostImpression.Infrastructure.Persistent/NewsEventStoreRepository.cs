@@ -72,4 +72,16 @@ public class NewsEventStoreRepository(NewsImpressionDbContext dbContext)
         var summary = await dbContext.NewsImpressionSummaries.FindAsync(newsId);
         return summary?.TotalLikes ?? 0;
     }
+
+    public async Task<IEnumerable<NewsEventStore>> GetUnprocessedEventStoreAsync()
+    {
+        var unProcessedEvents = await dbContext.NewsEventStores.Where(e => !e.Processed).ToListAsync();
+        return unProcessedEvents;
+    }
+
+    public async Task UpdateEventStoreAsync(NewsEventStore newsEventStore)
+    {
+        dbContext.NewsEventStores.Update(newsEventStore);
+        await dbContext.SaveChangesAsync();
+    }
 }

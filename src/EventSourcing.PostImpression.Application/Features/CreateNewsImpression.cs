@@ -29,8 +29,7 @@ public static class CreateNewsImpression
             var news = News.Create(request.Id);
             news.Like(request.UserId);
             var occurredOn = await eventStoreRepository.SaveAsync(request.Id, news.GetEvents());
-            var updatedOn = await eventStoreRepository.UpdateProjectionAsync(request.Id, news.GetEvents());
-            return new NewsLikeResponse(occurredOn != DateTime.MinValue && updatedOn != DateTime.MinValue, occurredOn);
+            return new NewsLikeResponse(occurredOn != DateTime.MinValue, occurredOn);
         }
     }
     
@@ -42,8 +41,7 @@ public static class CreateNewsImpression
             var news = News.Create(request.Id);
             news.RemoveLike(request.UserId);
             var occurredOn = await eventStoreRepository.SaveAsync(request.Id, news.GetEvents());
-            var updatedOn = await eventStoreRepository.UpdateProjectionAsync(request.Id, news.GetEvents());
-            return new NewsLikeRemoveResponse(occurredOn != DateTime.MinValue && updatedOn != DateTime.MinValue, occurredOn);
+            return new NewsLikeRemoveResponse(occurredOn != DateTime.MinValue, occurredOn);
         }
     }
     
