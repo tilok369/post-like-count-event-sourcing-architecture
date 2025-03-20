@@ -1,7 +1,7 @@
 using EventSourcing.PostImpression.Domain.Entities;
 using EventSourcing.PostImpression.Domain.Events;
 
-namespace EventSourcing.PostImpression.Infrastructure.Persistent;
+namespace EventSourcing.PostImpression.Application.Contracts.Persistent;
 
 public interface INewsEventStoreRepository
 {

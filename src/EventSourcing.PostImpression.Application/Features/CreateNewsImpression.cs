@@ -1,11 +1,10 @@
 using Carter;
+using EventSourcing.PostImpression.Application.Contracts.Persistent;
 using EventSourcing.PostImpression.Domain.Entities;
-using EventSourcing.PostImpression.Infrastructure.Persistent;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
 
 namespace EventSourcing.PostImpression.Application.Features;
 

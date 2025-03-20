@@ -1,4 +1,5 @@
 using System.Text.Json;
+using EventSourcing.PostImpression.Application.Contracts.Persistent;
 using EventSourcing.PostImpression.Domain.Entities;
 using EventSourcing.PostImpression.Domain.Events;
 using Microsoft.EntityFrameworkCore;
