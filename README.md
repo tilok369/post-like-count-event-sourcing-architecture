@@ -35,3 +35,6 @@ This implementation is evolved from basic to highly scalable
 - [Then added Projection with Summary Table](https://github.com/tilok369/post-like-count-event-sourcing-architecture/tree/summary-projection)
 - [After that added with Outbox Pattern with Separate Background Service for Projection](https://github.com/tilok369/post-like-count-event-sourcing-architecture/tree/summary-projection-with-outbox)
 - [Next, added MassTransit for Projection Update for High Scalability](https://github.com/tilok369/post-like-count-event-sourcing-architecture/tree/summary-projection-with-outbox-and-masstransit)
+
+# License
+This project is under [MIT License](https://github.com/tilok369/post-like-count-event-sourcing-architecture/blob/summary-projection-with-outbox-and-masstransit/LICENSE)
