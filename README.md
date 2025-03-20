@@ -9,3 +9,29 @@ Event Sourcing is an architectural pattern where the state of an application is 
 Loving this repository? Show your support by giving this project a star!
 
 [![GitHub stars](https://img.shields.io/github/stars/tilok369/post-like-count-event-sourcing-architecture.svg?style=social&label=Star)](https://github.com/tilok369/post-like-count-event-sourcing-architecture)
+
+
+## Patterns Used
+- Mediator
+- CQRS
+- Generic Repository
+- Transactional Outbox
+- MassTransit with RabbitMQ
+
+## Technologies Used
+- .NET 8 Web API (minimal API)
+- MediatR
+- Entity Framework Core
+- Carter
+- Swagger
+- SQL Server
+- MassTransit
+- RabbitMQ
+
+## Project Evaluation
+This implementation is evolved from basic to highly scalable
+
+- Basic implementation involved NewsEventStore with Events
+- [Then added Projection with Summary Table](https://github.com/tilok369/post-like-count-event-sourcing-architecture/tree/summary-projection)
+- [After that added with Outbox Pattern with Separate Background Service for Projection](https://github.com/tilok369/post-like-count-event-sourcing-architecture/tree/summary-projection-with-outbox)
+- [Next, added MassTransit for Projection Update for High Scalability](https://github.com/tilok369/post-like-count-event-sourcing-architecture/tree/summary-projection-with-outbox-and-masstransit)
